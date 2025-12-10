@@ -154,13 +154,15 @@ export const StatisticsPanel = ({ data, onBack }) => {
       {/* Header */}
       <div className="flex items-center justify-between px-8 py-5 bg-white border-b border-slate-100 sticky top-0 z-30">
         <div className="flex items-center gap-3">
-          <button
-            onClick={onBack}
-            className="flex items-center gap-2 px-3 py-2 hover:bg-slate-50 rounded-xl transition-colors text-slate-500 hover:text-slate-700"
-          >
-            <ArrowLeft size={18} />
-            <span className="font-medium">Back</span>
-          </button>
+          {onBack && (
+            <button
+              onClick={onBack}
+              className="flex items-center gap-2 px-3 py-2 hover:bg-slate-50 rounded-xl transition-colors text-slate-500 hover:text-slate-700"
+            >
+              <ArrowLeft size={18} />
+              <span className="font-medium">Back</span>
+            </button>
+          )}
           <div className="w-px h-6 bg-slate-200"></div>
           <h2 className="font-bold text-slate-800 text-lg">Statistical Overview</h2>
         </div>

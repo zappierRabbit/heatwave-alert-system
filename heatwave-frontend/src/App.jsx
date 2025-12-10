@@ -28,6 +28,8 @@ function App() {
   return (
     <DashboardLayout activeTab={activeTab} onTabChange={setActiveTab} onSearch={handleSearch} data={data}>
       {activeTab === 'dashboard' ? (
+        <StatisticsPanel data={data} />
+      ) : activeTab === 'heatmap' ? (
         <>
           {/* Stats Overlay */}
           <div className="absolute top-4 left-4 z-[400] pointer-events-none">
@@ -73,8 +75,6 @@ function App() {
 
           <CityDetailPanel city={selectedCity} onClose={() => setSelectedCity(null)} />
         </>
-      ) : activeTab === 'statistics' ? (
-        <StatisticsPanel data={data} onBack={() => setActiveTab('dashboard')} />
       ) : activeTab === 'sops' ? (
         <SOPsPanel />
       ) : activeTab === 'alerts' ? (

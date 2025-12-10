@@ -8,6 +8,7 @@ import {
     AlertTriangle,
     ChevronLeft,
     ChevronRight,
+    Map,
 } from 'lucide-react';
 
 const NavItem = ({ icon: Icon, label, active, onClick, collapsed }) => (
@@ -66,10 +67,10 @@ export const Sidebar = ({ activeTab, onTabChange, collapsed = false, onToggleCol
                     collapsed={collapsed}
                 />
                 <NavItem
-                    icon={BarChart3}
-                    label="Statistics"
-                    active={activeTab === 'statistics'}
-                    onClick={() => onTabChange('statistics')}
+                    icon={Map}
+                    label="Heat Map"
+                    active={activeTab === 'heatmap'}
+                    onClick={() => onTabChange('heatmap')}
                     collapsed={collapsed}
                 />
                 <NavItem
