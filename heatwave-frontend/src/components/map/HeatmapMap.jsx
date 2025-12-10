@@ -5,15 +5,24 @@ import {
   CircleMarker,
   Tooltip,
   useMap,
+  GeoJSON,
 } from 'react-leaflet';
+import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { HeatmapLayer } from './HeatmapLayer';
 import { TemperatureLegend } from './TemperatureLegend';
 import { generateHeatmapPoints } from '../../utils/heatmapGenerator';
 import { getTemperatureColor } from '../../data/cities';
+import { PAKISTAN_BOUNDARY, PAKISTAN_BOUNDS } from '../../data/pakistanBoundary';
 
 const MapController = ({ selectedCity }) => {
   const map = useMap();
+
+  React.useEffect(() => {
+    // Set max bounds to restrict panning
+    map.setMaxBounds(PAKISTAN_BOUNDS);
+  }, [map]);
+
   React.useEffect(() => {
     if (selectedCity) {
       map.flyTo([selectedCity.lat, selectedCity.lng], 10, {
@@ -21,6 +30,59 @@ const MapController = ({ selectedCity }) => {
       });
     }
   }, [selectedCity, map]);
+
+  return null;
+};
+
+// Style for Pakistan boundary
+const boundaryStyle = {
+  color: '#1e3a5f',
+  weight: 2.5,
+  opacity: 1,
+  fillColor: 'transparent',
+  fillOpacity: 0,
+};
+
+// Style for masking areas outside Pakistan
+const MaskLayer = () => {
+  const map = useMap();
+
+  React.useEffect(() => {
+    // Create a mask that covers the world except Pakistan
+    const worldBounds = [
+      [-90, -180],
+      [-90, 180],
+      [90, 180],
+      [90, -180],
+      [-90, -180],
+    ];
+
+    // Pakistan coordinates (reversed for the hole)
+    const pakistanCoords = PAKISTAN_BOUNDARY.geometry.coordinates[0].map(
+      (coord) => [coord[1], coord[0]]
+    );
+
+    // Create polygon with hole
+    const maskPolygon = L.polygon(
+      [
+        worldBounds.map((c) => [c[0], c[1]]),
+        pakistanCoords,
+      ],
+      {
+        color: 'transparent',
+        fillColor: '#f8fafc',
+        fillOpacity: 0.95,
+        interactive: false,
+      }
+    );
+
+    maskPolygon.addTo(map);
+
+    return () => {
+      map.removeLayer(maskPolygon);
+    };
+  }, [map]);
+
   return null;
 };
 
@@ -34,10 +96,12 @@ export const HeatmapMap = ({ data, onCitySelect, selectedCity }) => {
         center={[30.3753, 69.3451]}
         zoom={6}
         scrollWheelZoom={true}
-        className="h-full w-full bg-slate-50"
+        className="h-full w-full bg-slate-100"
         zoomControl={false}
         minZoom={5}
         maxZoom={12}
+        maxBounds={PAKISTAN_BOUNDS}
+        maxBoundsViscosity={1.0}
       >
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
@@ -45,6 +109,12 @@ export const HeatmapMap = ({ data, onCitySelect, selectedCity }) => {
         />
 
         <HeatmapLayer points={heatmapPoints} />
+
+        {/* Mask areas outside Pakistan */}
+        <MaskLayer />
+
+        {/* Pakistan boundary outline */}
+        <GeoJSON data={PAKISTAN_BOUNDARY} style={boundaryStyle} />
 
         {/* City labels layer on top */}
         <TileLayer

@@ -4,7 +4,7 @@
 export const generateHeatmapPoints = (cities) => {
   if (!cities || cities.length === 0) return [];
 
-  const minTemp = 15;
+  const minTemp = 10; // Lowered for cold Kashmir/Ladakh regions
   const maxTemp = 52;
   const tempRange = maxTemp - minTemp;
 

@@ -492,6 +492,116 @@ export const PAKISTAN_CITIES = [
     population: '0.05M',
     baseTemp: 35,
   },
+  {
+    id: 'neelum',
+    name: 'Neelum Valley',
+    lat: 34.5917,
+    lng: 74.3417,
+    province: 'Azad Kashmir',
+    population: '0.1M',
+    baseTemp: 24,
+  },
+  {
+    id: 'bagh',
+    name: 'Bagh',
+    lat: 33.98,
+    lng: 73.78,
+    province: 'Azad Kashmir',
+    population: '0.05M',
+    baseTemp: 26,
+  },
+
+  // JAMMU & KASHMIR (Disputed Territory)
+  {
+    id: 'srinagar',
+    name: 'Srinagar',
+    lat: 34.0837,
+    lng: 74.7973,
+    province: 'Jammu & Kashmir',
+    population: '1.2M',
+    baseTemp: 28,
+  },
+  {
+    id: 'jammu',
+    name: 'Jammu',
+    lat: 32.7266,
+    lng: 74.857,
+    province: 'Jammu & Kashmir',
+    population: '0.6M',
+    baseTemp: 38,
+  },
+  {
+    id: 'anantnag',
+    name: 'Anantnag',
+    lat: 33.7311,
+    lng: 75.1487,
+    province: 'Jammu & Kashmir',
+    population: '0.1M',
+    baseTemp: 26,
+  },
+  {
+    id: 'baramulla',
+    name: 'Baramulla',
+    lat: 34.1981,
+    lng: 74.3639,
+    province: 'Jammu & Kashmir',
+    population: '0.1M',
+    baseTemp: 27,
+  },
+  {
+    id: 'pulwama',
+    name: 'Pulwama',
+    lat: 33.8742,
+    lng: 74.8953,
+    province: 'Jammu & Kashmir',
+    population: '0.05M',
+    baseTemp: 27,
+  },
+  {
+    id: 'kupwara',
+    name: 'Kupwara',
+    lat: 34.5267,
+    lng: 74.2544,
+    province: 'Jammu & Kashmir',
+    population: '0.05M',
+    baseTemp: 25,
+  },
+  {
+    id: 'sopore',
+    name: 'Sopore',
+    lat: 34.3,
+    lng: 74.47,
+    province: 'Jammu & Kashmir',
+    population: '0.07M',
+    baseTemp: 26,
+  },
+  {
+    id: 'kargil',
+    name: 'Kargil',
+    lat: 34.55,
+    lng: 76.13,
+    province: 'Ladakh',
+    population: '0.02M',
+    baseTemp: 18,
+  },
+  {
+    id: 'leh',
+    name: 'Leh',
+    lat: 34.1526,
+    lng: 77.5771,
+    province: 'Ladakh',
+    population: '0.03M',
+    baseTemp: 15,
+  },
+  {
+    id: 'drass',
+    name: 'Drass',
+    lat: 34.43,
+    lng: 75.76,
+    province: 'Ladakh',
+    population: '0.01M',
+    baseTemp: 12, // One of the coldest inhabited places
+  },
 
   // Additional data points for coverage (regional interpolation points)
   {
@@ -543,6 +653,7 @@ export const PAKISTAN_CITIES = [
 
 // Temperature legend configuration - maps colors to temperature ranges
 export const TEMPERATURE_LEGEND = [
+  { min: 10, max: 15, color: '#0d3d0d', label: '10-15°C' },
   { min: 15, max: 20, color: '#1a5f1a', label: '15-20°C' },
   { min: 20, max: 25, color: '#2d8a2d', label: '20-25°C' },
   { min: 25, max: 30, color: '#4caf50', label: '25-30°C' },
@@ -564,6 +675,6 @@ export const getTemperatureColor = (temp) => {
     }
   }
   // Return extreme colors for out-of-range values
-  if (temp < 15) return '#1a5f1a';
+  if (temp < 10) return '#0d3d0d';
   return '#b71c1c';
 };
