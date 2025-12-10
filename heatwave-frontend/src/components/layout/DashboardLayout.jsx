@@ -21,7 +21,7 @@ const Header = ({ activeTab }) => {
         <h1 className="text-2xl font-bold text-slate-800">{getPageTitle()}</h1>
         <div className="flex items-center gap-2 text-sm text-slate-500">
           <span>Displaying</span>
-          <button className="underlineflex items-center gap-1 text-slate-700 font-medium hover:text-slate-900 transition-colors">
+          <button className=" flex items-center gap-1 text-slate-700 font-medium hover:text-slate-900 transition-colors">
             Campaigns
             <ChevronDown size={16} />
           </button>

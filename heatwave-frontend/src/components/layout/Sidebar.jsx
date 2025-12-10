@@ -40,8 +40,7 @@ export const Sidebar = ({ activeTab, onTabChange, collapsed = false, onToggleCol
             {/* Brand */}
             <div className="px-4 py-6">
                 <div className="flex items-center gap-1">
-                    <span className="text-slate-500 text-xs align-top">M</span>
-                    <h1 className="text-2xl font-bold text-white tracking-tight">HeatWatch</h1>
+                    <h1 className="text-2xl font-bold text-white tracking-tight ">HeatWatch</h1>
                 </div>
             </div>
 
