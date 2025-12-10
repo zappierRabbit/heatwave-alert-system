@@ -4,6 +4,7 @@ import {
     Settings,
     BarChart3,
     FileText,
+    BookOpen,
     ChevronLeft,
     ChevronRight,
 } from 'lucide-react';
@@ -73,8 +74,14 @@ export const Sidebar = ({ activeTab, onTabChange, collapsed = false, onToggleCol
                 <NavItem
                     icon={FileText}
                     label="Reports"
-                    active={activeTab === 'reports'}
                     onClick={() => onTabChange('reports')}
+                    collapsed={collapsed}
+                />
+                <NavItem
+                    icon={BookOpen}
+                    label="SOPs & Resources"
+                    active={activeTab === 'sops'}
+                    onClick={() => onTabChange('sops')}
                     collapsed={collapsed}
                 />
 

@@ -1,0 +1,474 @@
+{
+    "procedures": [
+        {
+            "id": "sop-001",
+            "title": "Heat Stroke Emergency Response",
+            "category": "Medical Emergency",
+            "tags": [
+                "Urgent",
+                "First Aid",
+                "Life Threatening"
+            ],
+            "audience": "General Public",
+            "description": "Immediate actions to take when someone shows signs of heat stroke (unconsciousness, high body temp, dry skin).",
+            "steps": [
+                "Call Emergency Services (1122) immediately.",
+                "Move the person to a cool, shaded area.",
+                "Remove excess clothing.",
+                "Cool the person rapidly: immersion in cool water, or wet cloths on head/neck/armpits.",
+                "Do NOT give fluids if the person is unconscious."
+            ],
+            "critical_alert": true
+        },
+        {
+            "id": "sop-002",
+            "title": "Heat Exhaustion Management",
+            "category": "First Aid",
+            "tags": [
+                "Warning",
+                "Hydration",
+                "Rest"
+            ],
+            "audience": "General Public",
+            "description": "Steps to treat heat exhaustion before it escalates to heat stroke.",
+            "steps": [
+                "Move to a cool place immediately.",
+                "Lie down and elevate legs slightly.",
+                "Drink plenty of water or sports drinks.",
+                "Monitor symptoms; if vomiting or confusion occurs, seek medical help."
+            ],
+            "critical_alert": false
+        },
+        {
+            "id": "sop-003",
+            "title": "Setting Up a Cooling Center",
+            "category": "Management",
+            "tags": [
+                "Admin",
+                "Logistics",
+                "Facility"
+            ],
+            "audience": "Local Admins",
+            "description": "Guidelines for establishing a temporary public cooling facility.",
+            "steps": [
+                "Identify a location with reliable AC and backup power.",
+                "Ensure capacity for 50+ individuals with social distancing.",
+                "Stock: Water (3L/person/day), ORS packets, First Aid kits.",
+                "Designate separate areas for vulnerable groups (elderly, children).",
+                "Post signage clearly at entrance and nearby intersections."
+            ],
+            "critical_alert": false
+        },
+        {
+            "id": "sop-004",
+            "title": "Outdoor Worker Safety Protocol",
+            "category": "Workplace Safety",
+            "tags": [
+                "Labor",
+                "Prevention",
+                "Schedule"
+            ],
+            "audience": "Employers/Workers",
+            "description": "Mandatory safety measures for construction and outdoor labor during heatwaves.",
+            "steps": [
+                "Shift heavy work to early morning (before 10 AM) or evening (after 6 PM).",
+                "Mandatory 15-minute breaks every hour in shade.",
+                "Provide unlimited cool drinking water.",
+                "Implement a 'Buddy System' to monitor co-workers for signs of distress."
+            ],
+            "critical_alert": false
+        },
+        {
+            "id": "sop-005",
+            "title": "Hydration Guidelines",
+            "category": "Prevention",
+            "tags": [
+                "Wellness",
+                "Daily"
+            ],
+            "audience": "General Public",
+            "description": "Daily water intake recommendations during extreme heat.",
+            "steps": [
+                "Drink at least 2-3 cups of water every hour while active.",
+                "Avoid alcohol, caffeine, and sugary drinks.",
+                "Monitor urine color: clear/pale yellow indicates good hydration.",
+                "Eat water-rich foods (melons, cucumbers)."
+            ],
+            "critical_alert": false
+        }
+    ],
+    "resources": [
+        {
+            "id": "res-bwp-001",
+            "name": "Bahawalpur Victoria Hospital",
+            "city": "Bahawalpur",
+            "type": "Hospital",
+            "lat": 29.3957,
+            "lng": 71.6833,
+            "address": "Circular Road, Bahawalpur",
+            "contact": "062-9250431",
+            "capacity": "High",
+            "status": "Open 24/7"
+        },
+        {
+            "id": "res-bwp-002",
+            "name": "Civil Hospital Bahawalpur",
+            "city": "Bahawalpur",
+            "type": "Hospital",
+            "lat": 29.3892,
+            "lng": 71.6521,
+            "address": "Jhangi Wala Road, Bahawalpur",
+            "contact": "062-9255236",
+            "capacity": "Medium",
+            "status": "Open 24/7"
+        },
+        {
+            "id": "res-khi-001",
+            "name": "Jinnah Postgraduate Medical Centre (JPMC)",
+            "city": "Karachi",
+            "type": "Hospital",
+            "lat": 24.8532,
+            "lng": 67.0456,
+            "address": "Rafiqui Shaheed Road, Karachi",
+            "contact": "021-99201300",
+            "capacity": "Very High",
+            "status": "Open 24/7"
+        },
+        {
+            "id": "res-khi-002",
+            "name": "Civil Hospital Karachi",
+            "city": "Karachi",
+            "type": "Hospital",
+            "lat": 24.8596,
+            "lng": 67.0099,
+            "address": "Mission Road, Karachi",
+            "contact": "021-99215740",
+            "capacity": "Very High",
+            "status": "Open 24/7"
+        },
+        {
+            "id": "res-khi-003",
+            "name": "Aga Khan University Hospital",
+            "city": "Karachi",
+            "type": "Hospital",
+            "lat": 24.8926,
+            "lng": 67.0745,
+            "address": "Stadium Road, Karachi",
+            "contact": "021-111911911",
+            "capacity": "High",
+            "status": "Open 24/7"
+        },
+        {
+            "id": "res-lhr-001",
+            "name": "Mayo Hospital",
+            "city": "Lahore",
+            "type": "Hospital",
+            "lat": 31.5704,
+            "lng": 74.3129,
+            "address": "Hospital Road, Neila Gumbad, Lahore",
+            "contact": "042-99211100",
+            "capacity": "Very High",
+            "status": "Open 24/7"
+        },
+        {
+            "id": "res-lhr-002",
+            "name": "Jinnah Hospital",
+            "city": "Lahore",
+            "type": "Hospital",
+            "lat": 31.4925,
+            "lng": 74.293,
+            "address": "Usmani Road, Faisal Town, Lahore",
+            "contact": "042-99231400",
+            "capacity": "High",
+            "status": "Open 24/7"
+        },
+        {
+            "id": "res-isb-001",
+            "name": "Pakistan Institute of Medical Sciences (PIMS)",
+            "city": "Islamabad",
+            "type": "Hospital",
+            "lat": 33.7087,
+            "lng": 73.0560,
+            "address": "G-8/3, Islamabad",
+            "contact": "051-9261170",
+            "capacity": "Very High",
+            "status": "Open 24/7"
+        },
+        {
+            "id": "res-isb-002",
+            "name": "Shifa International Hospital",
+            "city": "Islamabad",
+            "type": "Hospital",
+            "lat": 33.6826,
+            "lng": 73.0673,
+            "address": "H-8/4, Islamabad",
+            "contact": "051-8463636",
+            "capacity": "High",
+            "status": "Open 24/7"
+        },
+        {
+            "id": "res-rwp-001",
+            "name": "Holy Family Hospital",
+            "city": "Rawalpindi",
+            "type": "Hospital",
+            "lat": 33.6385,
+            "lng": 73.0635,
+            "address": "Satellite Town, Rawalpindi",
+            "contact": "051-9290321",
+            "capacity": "High",
+            "status": "Open 24/7"
+        },
+        {
+            "id": "res-rwp-002",
+            "name": "Benazir Bhutto Hospital",
+            "city": "Rawalpindi",
+            "type": "Hospital",
+            "lat": 33.6190,
+            "lng": 73.0689,
+            "address": "Murree Road, Rawalpindi",
+            "contact": "051-9290301",
+            "capacity": "High",
+            "status": "Open 24/7"
+        },
+        {
+            "id": "res-fcd-001",
+            "name": "Allied Hospital",
+            "city": "Faisalabad",
+            "type": "Hospital",
+            "lat": 31.4367,
+            "lng": 73.0763,
+            "address": "Dr. Tusi Road, Faisalabad",
+            "contact": "041-9210080",
+            "capacity": "Very High",
+            "status": "Open 24/7"
+        },
+        {
+            "id": "res-fcd-002",
+            "name": "DHQ Hospital Faisalabad",
+            "city": "Faisalabad",
+            "type": "Hospital",
+            "lat": 31.4187,
+            "lng": 73.0791,
+            "address": "Jail Road, Faisalabad",
+            "contact": "041-9200322",
+            "capacity": "High",
+            "status": "Open 24/7"
+        },
+        {
+            "id": "res-mul-001",
+            "name": "Nishtar Hospital",
+            "city": "Multan",
+            "type": "Hospital",
+            "lat": 30.2014,
+            "lng": 71.4927,
+            "address": "Nishtar Road, Multan",
+            "contact": "061-9200238",
+            "capacity": "Very High",
+            "status": "Open 24/7"
+        },
+        {
+            "id": "res-mul-002",
+            "name": "Children Complex Hospital",
+            "city": "Multan",
+            "type": "Hospital",
+            "lat": 30.1656,
+            "lng": 71.4346,
+            "address": "Abdali Road, Multan",
+            "contact": "061-9200231",
+            "capacity": "High",
+            "status": "Open 24/7"
+        },
+        {
+            "id": "res-pes-001",
+            "name": "Lady Reading Hospital",
+            "city": "Peshawar",
+            "type": "Hospital",
+            "lat": 34.0094,
+            "lng": 71.5649,
+            "address": "Soekarno Rd, Peshawar",
+            "contact": "091-9211430",
+            "capacity": "Very High",
+            "status": "Open 24/7"
+        },
+        {
+            "id": "res-pes-002",
+            "name": "Hayatabad Medical Complex",
+            "city": "Peshawar",
+            "type": "Hospital",
+            "lat": 33.9876,
+            "lng": 71.4552,
+            "address": "Phase-4 Hayatabad, Peshawar",
+            "contact": "091-9217140",
+            "capacity": "High",
+            "status": "Open 24/7"
+        },
+        {
+            "id": "res-qta-001",
+            "name": "Civil Hospital Quetta",
+            "city": "Quetta",
+            "type": "Hospital",
+            "lat": 30.1982,
+            "lng": 67.0093,
+            "address": "Jinnah Road, Quetta",
+            "contact": "081-9202017",
+            "capacity": "Very High",
+            "status": "Open 24/7"
+        },
+        {
+            "id": "res-qta-002",
+            "name": "Boland Medical Complex",
+            "city": "Quetta",
+            "type": "Hospital",
+            "lat": 30.1656,
+            "lng": 66.9734,
+            "address": "Brewery Road, Quetta",
+            "contact": "081-9213155",
+            "capacity": "High",
+            "status": "Open 24/7"
+        },
+        {
+            "id": "res-hyd-001",
+            "name": "Liaquat University Hospital",
+            "city": "Hyderabad",
+            "type": "Hospital",
+            "lat": 25.3960,
+            "lng": 68.3578,
+            "address": "City Center, Hyderabad",
+            "contact": "022-9210207",
+            "capacity": "Very High",
+            "status": "Open 24/7"
+        },
+        {
+            "id": "res-guj-001",
+            "name": "DHQ Hospital Gujranwala",
+            "city": "Gujranwala",
+            "type": "Hospital",
+            "lat": 32.1617,
+            "lng": 74.1884,
+            "address": "Hospital Road, Gujranwala",
+            "contact": "055-9200236",
+            "capacity": "High",
+            "status": "Open 24/7"
+        },
+        {
+            "id": "res-skt-001",
+            "name": "Allama Iqbal Memorial Teaching Hospital",
+            "city": "Sialkot",
+            "type": "Hospital",
+            "lat": 32.4937,
+            "lng": 74.5241,
+            "address": "Commissioner Road, Sialkot",
+            "contact": "052-9250325",
+            "capacity": "High",
+            "status": "Open 24/7"
+        },
+        {
+            "id": "res-sgd-001",
+            "name": "DHQ Teaching Hospital",
+            "city": "Sargodha",
+            "type": "Hospital",
+            "lat": 32.0836,
+            "lng": 72.6711,
+            "address": "Faisalabad Road, Sargodha",
+            "contact": "048-9230553",
+            "capacity": "High",
+            "status": "Open 24/7"
+        },
+        {
+            "id": "res-skr-001",
+            "name": "Civil Hospital Sukkur",
+            "city": "Sukkur",
+            "type": "Hospital",
+            "lat": 27.7052,
+            "lng": 68.8574,
+            "address": "Station Road, Sukkur",
+            "contact": "071-9310118",
+            "capacity": "High",
+            "status": "Open 24/7"
+        },
+        {
+            "id": "res-skp-001",
+            "name": "DHQ Hospital Sheikhupura",
+            "city": "Sheikhupura",
+            "type": "Hospital",
+            "lat": 31.7144,
+            "lng": 73.9783,
+            "address": "Sargodha Road, Sheikhupura",
+            "contact": "056-9200146",
+            "capacity": "Medium",
+            "status": "Open 24/7"
+        },
+        {
+            "id": "res-jng-001",
+            "name": "DHQ Hospital Jhang",
+            "city": "Jhang",
+            "type": "Hospital",
+            "lat": 31.2721,
+            "lng": 72.3168,
+            "address": "Gojra Road, Jhang",
+            "contact": "047-9200230",
+            "capacity": "Medium",
+            "status": "Open 24/7"
+        },
+        {
+            "id": "res-kas-001",
+            "name": "DHQ Hospital Kasur",
+            "city": "Kasur",
+            "type": "Hospital",
+            "lat": 31.1158,
+            "lng": 74.4447,
+            "address": "Kutchery Road, Kasur",
+            "contact": "049-9239126",
+            "capacity": "Medium",
+            "status": "Open 24/7"
+        },
+        {
+            "id": "res-guj-002",
+            "name": "Aziz Bhatti Shaheed Hospital",
+            "city": "Gujrat",
+            "type": "Hospital",
+            "lat": 32.5739,
+            "lng": 74.0655,
+            "address": "Bhimber Road, Gujrat",
+            "contact": "053-9260100",
+            "capacity": "High",
+            "status": "Open 24/7"
+        },
+        {
+            "id": "res-mar-001",
+            "name": "Mardan Medical Complex",
+            "city": "Mardan",
+            "type": "Hospital",
+            "lat": 34.1950,
+            "lng": 72.0463,
+            "address": "Nowshera Road, Mardan",
+            "contact": "0937-9230580",
+            "capacity": "High",
+            "status": "Open 24/7"
+        },
+        {
+            "id": "res-lar-001",
+            "name": "Chandka Medical College Hospital",
+            "city": "Larkana",
+            "type": "Hospital",
+            "lat": 27.5583,
+            "lng": 68.2104,
+            "address": "VIP Road, Larkana",
+            "contact": "074-9410710",
+            "capacity": "High",
+            "status": "Open 24/7"
+        },
+        {
+            "id": "res-swl-001",
+            "name": "DHQ Hospital Sahiwal",
+            "city": "Sahiwal",
+            "type": "Hospital",
+            "lat": 30.6682,
+            "lng": 73.1114,
+            "address": "Faisalabad Road, Sahiwal",
+            "contact": "040-9200270",
+            "capacity": "High",
+            "status": "Open 24/7"
+        }
+    ]
+}

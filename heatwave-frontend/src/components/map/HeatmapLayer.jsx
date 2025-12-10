@@ -7,20 +7,14 @@ export const HeatmapLayer = ({ points }) => {
   const map = useMap();
   const heatLayerRef = useRef(null);
 
-  // Temperature gradient - green (cool) to red (hot)
+  // Temperature gradient - Blue (cool) -> Cyan -> Lime -> Yellow -> Red (hot)
   const gradient = {
-    0.0: '#0d3d0d',  // Dark green
-    0.12: '#1a5f1a',
-    0.24: '#2d8a2d',
-    0.36: '#4caf50',
-    0.48: '#8bc34a',
-    0.55: '#cddc39',
-    0.62: '#ffeb3b',
-    0.69: '#ffc107',
-    0.76: '#ff9800',
-    0.83: '#ff5722',
-    0.9: '#f44336',
-    1.0: '#b71c1c',  // Dark red
+    0.0: '#00008b',   // Dark Blue
+    0.2: '#00bcd4',   // Cyan
+    0.4: '#00ff00',   // Lime
+    0.6: '#ffff00',   // Yellow
+    0.8: '#ff8c00',   // Dark Orange
+    1.0: '#ff0000',   // Red
   };
 
   // Cluster points using projected coordinates (meters) for consistent distance
@@ -62,13 +56,22 @@ export const HeatmapLayer = ({ points }) => {
     const currentZoom = map.getZoom();
     const displayPoints = clusterPoints(points, currentZoom);
 
-    // Dynamically set radius to cover most of the map (~95%)
-    const mapSize = map.getSize();
-    const largerDimension = Math.max(mapSize.x, mapSize.y);
+    // Dynamic radius strategy:
+    // If clustered (low zoom), keep radius comparable to grid size to avoid "blobs"
+    // If zoomed in (raw points), maybe allow slightly larger for smooth blending
+    const isClustered = currentZoom < 9;
 
-    // Radius proportional to map size
-    const radius = Math.max(40, largerDimension / 15);  // tweak divisor for coverage
-    const blur = radius * 0.6;
+    let radius, blur;
+
+    if (isClustered) {
+      // Grid is 60px. Radius of ~40-50 blends neighbors slightly without creating a massive blob.
+      radius = 45;
+      blur = 30;
+    } else {
+      // High zoom: standard logic or fixed appropriate size
+      radius = 30;
+      blur = 20;
+    }
 
     const maxIntensity = Math.max(...displayPoints.map(p => p[2]), 1);
 
@@ -77,12 +80,12 @@ export const HeatmapLayer = ({ points }) => {
         radius,
         blur,
         max: maxIntensity,
-        minOpacity: 0.4,
+        minOpacity: 0.3, // Slightly lower min opacity for subtler cool areas
         gradient,
       }).addTo(map);
     } else {
       heatLayerRef.current.setLatLngs(displayPoints);
-      heatLayerRef.current.setOptions({ radius, blur, max: maxIntensity });
+      heatLayerRef.current.setOptions({ radius, blur, max: maxIntensity, gradient, minOpacity: 0.3 });
     }
   };
 

@@ -3,6 +3,7 @@ import { DashboardLayout } from './components/layout/DashboardLayout';
 import { HeatmapMap } from './components/map/HeatmapMap';
 import { CityDetailPanel } from './components/dashboard/CityDetailPanel';
 import { StatisticsPanel } from './components/dashboard/StatisticsPanel';
+import { SOPsPanel } from './components/dashboard/SOPsPanel';
 import { useHeatwaveData } from './hooks/useHeatwaveData';
 import { Thermometer, TrendingUp, MapPin } from 'lucide-react';
 
@@ -73,6 +74,8 @@ function App() {
         </>
       ) : activeTab === 'statistics' ? (
         <StatisticsPanel data={data} onBack={() => setActiveTab('dashboard')} />
+      ) : activeTab === 'sops' ? (
+        <SOPsPanel />
       ) : (
         <div className="flex flex-col items-center justify-center h-full text-slate-400 gap-4 bg-slate-50">
           <div className="w-16 h-16 rounded-xl bg-slate-100 flex items-center justify-center">
