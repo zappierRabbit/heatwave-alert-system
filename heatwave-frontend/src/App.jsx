@@ -24,7 +24,7 @@ function App() {
   };
 
   return (
-    <DashboardLayout activeTab={activeTab} onTabChange={setActiveTab} onSearch={handleSearch}>
+    <DashboardLayout activeTab={activeTab} onTabChange={setActiveTab} onSearch={handleSearch} data={data}>
       {activeTab === 'dashboard' ? (
         <>
           {/* Stats Overlay */}

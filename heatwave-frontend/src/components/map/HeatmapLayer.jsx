@@ -1,4 +1,4 @@
-import { useEffect, useRef, useMemo } from 'react';
+import { useEffect, useRef } from 'react';
 import { useMap, useMapEvents } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet.heat';
@@ -7,206 +7,104 @@ export const HeatmapLayer = ({ points }) => {
   const map = useMap();
   const heatLayerRef = useRef(null);
 
-  // Memoize gradient to prevent unnecessary recalculations
-  const gradient = useMemo(() => ({
-    0.0: '#0d3d0d',   // Very dark green (10-15°C)
-    0.12: '#1a5f1a',  // Dark green (15-20°C)
-    0.24: '#2d8a2d',  // Green (20-25°C)
-    0.36: '#4caf50',  // Light green (25-30°C)
-    0.48: '#8bc34a',  // Lime (30-35°C)
-    0.55: '#cddc39',  // Yellow-green (35-38°C)
-    0.62: '#ffeb3b',  // Yellow (38-40°C)
-    0.69: '#ffc107',  // Amber (40-42°C)
-    0.76: '#ff9800',  // Orange (42-44°C)
-    0.83: '#ff5722',  // Deep orange (44-46°C)
-    0.9: '#f44336',   // Red (46-48°C)
-    1.0: '#b71c1c',   // Dark red (48-52°C)
-  }), []);
+  // Temperature gradient - green (cool) to red (hot)
+  const gradient = {
+    0.0: '#0d3d0d',  // Dark green
+    0.12: '#1a5f1a',
+    0.24: '#2d8a2d',
+    0.36: '#4caf50',
+    0.48: '#8bc34a',
+    0.55: '#cddc39',
+    0.62: '#ffeb3b',
+    0.69: '#ffc107',
+    0.76: '#ff9800',
+    0.83: '#ff5722',
+    0.9: '#f44336',
+    1.0: '#b71c1c',  // Dark red
+  };
 
-  // Improved clustering with zoom-adaptive behavior
-  const clusterPoints = useMemo(() => {
-    if (!points || points.length === 0) return [];
+  // Cluster points using projected coordinates (meters) for consistent distance
+  const clusterPoints = (points, zoom) => {
+    if (zoom >= 9) return points; // stop clustering when zoomed in
 
-    const currentZoom = map.getZoom();
-
-    // For high zoom levels, don't cluster
-    if (currentZoom >= 12) return points;
-
-    // Adjust clustering density based on zoom level
-    const pixelGridSize = 40 + (currentZoom * 2); // Smaller grid at higher zoom
-    const zoomFactor = Math.max(1, 15 - currentZoom); // More aggressive clustering at lower zoom
-
-    // Convert to screen coordinates for accurate pixel-based clustering
-    const projectPoint = (lat, lng) => {
-      const point = map.latLngToContainerPoint([lat, lng]);
-      return { x: point.x, y: point.y };
-    };
-
-    const clusters = new Map();
+    const pixelGridSize = 60; // desired screen spacing in pixels
+    const clusters = {};
 
     points.forEach(point => {
       const [lat, lng, intensity] = point;
-      const screenPoint = projectPoint(lat, lng);
 
-      // Create grid cell key based on screen coordinates
-      const gridX = Math.floor(screenPoint.x / pixelGridSize);
-      const gridY = Math.floor(screenPoint.y / pixelGridSize);
+      // Project lat/lng to point (meters)
+      const projected = map.project([lat, lng], map.getZoom());
+      const gridX = Math.floor(projected.x / pixelGridSize);
+      const gridY = Math.floor(projected.y / pixelGridSize);
       const key = `${gridX},${gridY}`;
 
-      if (!clusters.has(key)) {
-        clusters.set(key, {
-          latSum: 0,
-          lngSum: 0,
-          intensitySum: 0,
-          maxIntensity: 0, // Track maximum intensity
-          count: 0,
-          screenX: screenPoint.x,
-          screenY: screenPoint.y
-        });
+      if (!clusters[key]) {
+        clusters[key] = { latSum: 0, lngSum: 0, intensitySum: 0, count: 0 };
       }
 
-      const cluster = clusters.get(key);
-      cluster.latSum += lat;
-      cluster.lngSum += lng;
-      cluster.intensitySum += intensity;
-      cluster.maxIntensity = Math.max(cluster.maxIntensity, intensity);
-      cluster.count += 1;
-
-      // Update screen position to be average of all points
-      cluster.screenX = (cluster.screenX * (cluster.count - 1) + screenPoint.x) / cluster.count;
-      cluster.screenY = (cluster.screenY * (cluster.count - 1) + screenPoint.y) / cluster.count;
+      clusters[key].latSum += lat;
+      clusters[key].lngSum += lng;
+      clusters[key].intensitySum += intensity;
+      clusters[key].count += 1;
     });
 
-    // Convert clusters back to points
-    const result = [];
+    return Object.values(clusters).map(cluster => [
+      cluster.latSum / cluster.count,
+      cluster.lngSum / cluster.count,
+      cluster.intensitySum / cluster.count
+    ]);
+  };
 
-    clusters.forEach(cluster => {
-      if (cluster.count > 0) {
-        // Use weighted average that preserves intensity distribution
-        // Options: average, max, or weighted average
-        const avgLat = cluster.latSum / cluster.count;
-        const avgLng = cluster.lngSum / cluster.count;
+  const updateHeatLayer = () => {
+    if (!points || points.length === 0) return;
 
-        // Choose intensity method based on use case:
-        // 1. Use maximum intensity to preserve hotspots
-        // const clusterIntensity = cluster.maxIntensity;
+    const currentZoom = map.getZoom();
+    const displayPoints = clusterPoints(points, currentZoom);
 
-        // 2. Use average intensity (current approach)
-        const clusterIntensity = cluster.intensitySum / cluster.count;
+    // Dynamically set radius to cover most of the map (~95%)
+    const mapSize = map.getSize();
+    const largerDimension = Math.max(mapSize.x, mapSize.y);
 
-        // 3. Use weighted average (more points = higher intensity)
-        // const clusterIntensity = (cluster.intensitySum / cluster.count) * Math.min(cluster.count / 5, 1);
+    // Radius proportional to map size
+    const radius = Math.max(40, largerDimension / 15);  // tweak divisor for coverage
+    const blur = radius * 0.6;
 
-        // Only add cluster if it has reasonable intensity
-        if (clusterIntensity > 0.01) { // Threshold to filter noise
-          result.push([avgLat, avgLng, clusterIntensity]);
-        }
-      }
-    });
+    const maxIntensity = Math.max(...displayPoints.map(p => p[2]), 1);
 
-    return result;
-  }, [points, map]);
-
-  // Calculate optimal radius and blur based on zoom level
-  const getHeatmapConfig = useMemo(() => {
-    const zoom = map.getZoom();
-
-    // Radius and blur should decrease as we zoom in
-    let radius = 40;
-    let blur = 25;
-
-    if (zoom >= 12) {
-      // Very zoomed in - small, precise circles
-      radius = 15;
-      blur = 10;
-    } else if (zoom >= 9) {
-      // Medium zoom
-      radius = 25;
-      blur = 15;
-    } else if (zoom >= 6) {
-      // Lower zoom
-      radius = 35;
-      blur = 20;
-    } else {
-      // Very zoomed out
-      radius = 50;
-      blur = 30;
-    }
-
-    return { radius, blur };
-  }, [map]);
-
-  // Update heat layer function
-  const updateHeatLayer = useMemo(() => {
-    return () => {
-      if (!points || points.length === 0) {
-        if (heatLayerRef.current) {
-          map.removeLayer(heatLayerRef.current);
-          heatLayerRef.current = null;
-        }
-        return;
-      }
-
-      const size = map.getSize();
-      if (size.x === 0 || size.y === 0) return;
-
-      // Remove existing layer
-      if (heatLayerRef.current) {
-        map.removeLayer(heatLayerRef.current);
-      }
-
-      const { radius, blur } = getHeatmapConfig;
-
-      // Use clustered points if clustering is active
-      const displayPoints = clusterPoints.length > 0 ? clusterPoints : points;
-
-      // Find intensity range for better visualization
-      const intensities = displayPoints.map(p => p[2]);
-      const maxIntensity = Math.max(...intensities);
-      const minIntensity = Math.min(...intensities);
-
-      // Normalize intensities if needed
-      const normalizedPoints = maxIntensity > 1 ?
-        displayPoints.map(p => [p[0], p[1], p[2] / maxIntensity]) :
-        displayPoints;
-
-      // Create heat layer with zoom-adaptive settings
-      heatLayerRef.current = L.heatLayer(normalizedPoints, {
-        radius: radius,
-        blur: blur,
-        maxZoom: 18, // Increased max zoom
-        minOpacity: 0.3, // Slightly lower for better visibility
-        max: 1.0,
-        gradient: gradient,
-        // Add performance optimizations
-        pane: 'overlayPane',
+    if (!heatLayerRef.current) {
+      heatLayerRef.current = L.heatLayer(displayPoints, {
+        radius,
+        blur,
+        max: maxIntensity,
+        minOpacity: 0.4,
+        gradient,
       }).addTo(map);
+    } else {
+      heatLayerRef.current.setLatLngs(displayPoints);
+      heatLayerRef.current.setOptions({ radius, blur, max: maxIntensity });
+    }
+  };
 
-      // Debug info (optional)
-      console.log(`Heatmap updated: ${displayPoints.length} points, zoom: ${map.getZoom()}, radius: ${radius}`);
-    };
-  }, [map, points, clusterPoints, gradient, getHeatmapConfig]);
 
-  // Set up map event listeners
+  // Update heatmap on zoom end
   useMapEvents({
-    zoomend: updateHeatLayer,
-    moveend: updateHeatLayer,
-    resize: updateHeatLayer,
+    zoomend: () => {
+      updateHeatLayer();
+    },
   });
 
-  // Initial render and cleanup
+  // Initial render and update when points change
   useEffect(() => {
-    // Small delay to ensure map is fully initialized
-    const timer = setTimeout(updateHeatLayer, 100);
+    updateHeatLayer();
 
     return () => {
-      clearTimeout(timer);
       if (heatLayerRef.current) {
         map.removeLayer(heatLayerRef.current);
         heatLayerRef.current = null;
       }
     };
-  }, [updateHeatLayer, map]);
+  }, [map, points]);
 
   return null;
 };
