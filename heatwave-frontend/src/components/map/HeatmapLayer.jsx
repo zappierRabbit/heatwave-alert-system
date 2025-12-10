@@ -24,36 +24,79 @@ export const HeatmapLayer = ({ points }) => {
     1.0: '#b71c1c', // Dark red (48-52°C)
   };
 
+  // Pixel-based clustering to ensure constant screen density
+  // This prevents points from getting too close and "stacking" intensities
+  const clusterPoints = (points, zoom) => {
+    // If we are zoomed in enough (city level), stop clustering
+    if (zoom >= 9) return points;
+
+    // We want points to be roughly 60 pixels apart on screen
+    const pixelGridSize = 60;
+
+    // Calculate how many degrees represent those pixels at current zoom
+    // Formula: 360 degrees / (256px tile * 2^zoom) = degrees per pixel
+    const degreesPerPixel = 360 / (256 * Math.pow(2, zoom));
+    const gridSize = pixelGridSize * degreesPerPixel;
+
+    const clusters = {};
+
+    points.forEach(point => {
+      const [lat, lng, intensity] = point;
+
+      // Calculate grid cell keys
+      const gridX = Math.floor(lat / gridSize);
+      const gridY = Math.floor(lng / gridSize);
+      const key = `${gridX},${gridY}`;
+
+      if (!clusters[key]) {
+        clusters[key] = {
+          latSum: 0,
+          lngSum: 0,
+          intensitySum: 0,
+          weightSum: 0, // Use weight to prioritize hotter spots slightly if needed, or just average
+          count: 0
+        };
+      }
+
+      clusters[key].latSum += lat;
+      clusters[key].lngSum += lng;
+      clusters[key].intensitySum += intensity;
+      clusters[key].count += 1;
+    });
+
+    // Convert clusters back to points
+    return Object.values(clusters).map(cluster => [
+      cluster.latSum / cluster.count,
+      cluster.lngSum / cluster.count,
+      cluster.intensitySum / cluster.count // Strict Average
+    ]);
+  };
+
   const updateHeatLayer = () => {
     if (!points || points.length === 0) return;
 
-    // Safety check: ensure map has dimensions before drawing to avoid DOMException
     const size = map.getSize();
     if (size.x === 0 || size.y === 0) return;
 
-    // Remove existing layer
     if (heatLayerRef.current) {
       map.removeLayer(heatLayerRef.current);
     }
 
-    // Dynamic radius and blur based on zoom level
-    // When zooming out, use smaller radius to prevent excessive overlap (which leads to inaccurate red colors)
     const currentZoom = map.getZoom();
+    const displayPoints = clusterPoints(points, currentZoom);
 
-    // Scale from zoom 5 (min) to 10 (default detail view)
-    // Base: radius 35, blur 25 at zoom 10
-    // Min: radius 15, blur 10 at zoom 5
-    const normalizedZoom = Math.max(0, Math.min(1, (currentZoom - 5) / 5));
-    const radius = 15 + (normalizedZoom * 20); // 15 to 35
-    const blur = 10 + (normalizedZoom * 15);   // 10 to 25
+    // Since we control density (points are ~60px apart), 
+    // we can use a fixed radius effectively.
+    // Radius 40px ensures they touch (40+40 > 60) but don't stack deep.
+    const radius = 40;
+    const blur = 25; // Smooth gradients
 
-    // Create heat layer - simpler config like CodeSandbox example
-    heatLayerRef.current = L.heatLayer(points, {
+    heatLayerRef.current = L.heatLayer(displayPoints, {
       radius: radius,
       blur: blur,
       maxZoom: 10,
       max: 1.0,
-      minOpacity: 0.5,
+      minOpacity: 0.4,
       gradient: gradient,
     }).addTo(map);
   };
@@ -63,6 +106,8 @@ export const HeatmapLayer = ({ points }) => {
     zoomend: () => {
       updateHeatLayer();
     },
+    // Also update on move to handle edge cases if needed, 
+    // though for simple clustering zoomend is usually enough
   });
 
   // Initial render and update when points change
