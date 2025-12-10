@@ -1,11 +1,14 @@
 import { useState } from 'react';
 import { Sidebar } from './Sidebar';
 import { ChevronDown, Search, Bell, User, X } from 'lucide-react';
+import { AlertProvider, useAlerts } from '../../context/AlertContext';
+import { NotificationToast } from '../alerts/NotificationToast';
 
-const Header = ({ activeTab, onSearch, data = [] }) => {
+const Header = ({ activeTab, onSearch, data = [], onTabChange }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [suggestions, setSuggestions] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
+  const { unreadCount } = useAlerts();
 
   const getPageTitle = () => {
     const titles = {
@@ -13,6 +16,8 @@ const Header = ({ activeTab, onSearch, data = [] }) => {
       statistics: 'Statistics',
       reports: 'Reports',
       settings: 'Settings',
+      alerts: 'Alerts',
+      sops: 'SOPs & Resources'
     };
     return titles[activeTab] || 'Dashboard';
   };
@@ -117,8 +122,17 @@ const Header = ({ activeTab, onSearch, data = [] }) => {
         </button>
 
         {/* Notifications */}
-        <button className="relative p-2 hover:bg-slate-100 rounded-lg transition-colors">
+        <button
+          onClick={() => onTabChange && onTabChange('alerts')}
+          className="relative p-2 hover:bg-slate-100 rounded-lg transition-colors"
+        >
           <Bell size={20} className="text-slate-500" />
+          {unreadCount > 0 && (
+            <span className="absolute top-1.5 right-1.5 flex h-2.5 w-2.5">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-500"></span>
+            </span>
+          )}
         </button>
 
         {/* User Avatar */}
@@ -134,17 +148,20 @@ export const DashboardLayout = ({ children, activeTab, onTabChange, onSearch, da
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
   return (
-    <div className="flex h-screen w-full bg-slate-100 text-slate-900 overflow-hidden">
-      <Sidebar
-        activeTab={activeTab}
-        onTabChange={onTabChange}
-        collapsed={sidebarCollapsed}
-        onToggleCollapse={() => setSidebarCollapsed(!sidebarCollapsed)}
-      />
-      <div className="flex-1 flex flex-col overflow-hidden">
-        <Header activeTab={activeTab} onSearch={onSearch} data={data} />
-        <main className="flex-1 relative overflow-hidden">{children}</main>
+    <AlertProvider>
+      <div className="flex h-screen w-full bg-slate-100 text-slate-900 overflow-hidden">
+        <Sidebar
+          activeTab={activeTab}
+          onTabChange={onTabChange}
+          collapsed={sidebarCollapsed}
+          onToggleCollapse={() => setSidebarCollapsed(!sidebarCollapsed)}
+        />
+        <div className="flex-1 flex flex-col overflow-hidden">
+          <Header activeTab={activeTab} onSearch={onSearch} data={data} onTabChange={onTabChange} />
+          <main className="flex-1 relative overflow-hidden">{children}</main>
+          <NotificationToast />
+        </div>
       </div>
-    </div>
+    </AlertProvider>
   );
 };

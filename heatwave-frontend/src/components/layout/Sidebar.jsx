@@ -5,6 +5,7 @@ import {
     BarChart3,
     FileText,
     BookOpen,
+    AlertTriangle,
     ChevronLeft,
     ChevronRight,
 } from 'lucide-react';
@@ -82,6 +83,13 @@ export const Sidebar = ({ activeTab, onTabChange, collapsed = false, onToggleCol
                     label="SOPs & Resources"
                     active={activeTab === 'sops'}
                     onClick={() => onTabChange('sops')}
+                    collapsed={collapsed}
+                />
+                <NavItem
+                    icon={AlertTriangle}
+                    label="Alerts"
+                    active={activeTab === 'alerts'}
+                    onClick={() => onTabChange('alerts')}
                     collapsed={collapsed}
                 />
 

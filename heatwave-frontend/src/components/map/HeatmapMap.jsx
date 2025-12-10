@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import {
   MapContainer,
   TileLayer,
@@ -14,6 +14,7 @@ import { TemperatureLegend } from './TemperatureLegend';
 import { generateHeatmapPoints } from '../../utils/heatmapGenerator';
 import { getTemperatureColor } from '../../data/cities';
 import { PAKISTAN_BOUNDARY, PAKISTAN_BOUNDS } from '../../data/pakistanBoundary';
+import { Eye, EyeOff } from 'lucide-react';
 
 const MapController = ({ selectedCity }) => {
   const map = useMap();
@@ -91,6 +92,7 @@ const MaskLayer = () => {
 export const HeatmapMap = ({ data, onCitySelect, selectedCity }) => {
   // Memoize heatmap points to avoid recalculating on every render unless data changes
   const heatmapPoints = useMemo(() => generateHeatmapPoints(data), [data]);
+  const [showMarkers, setShowMarkers] = useState(true);
 
   return (
     <div className="h-full w-full relative z-0">
@@ -125,7 +127,7 @@ export const HeatmapMap = ({ data, onCitySelect, selectedCity }) => {
         />
 
         {/* City markers - using CircleMarker for cleaner look */}
-        {data.map((city) => (
+        {showMarkers && data.map((city) => (
           <CircleMarker
             key={city.id}
             center={[city.lat, city.lng]}
@@ -169,6 +171,20 @@ export const HeatmapMap = ({ data, onCitySelect, selectedCity }) => {
 
         <MapController selectedCity={selectedCity} />
       </MapContainer>
+
+      {/* Markers Toggle Control */}
+      <div className="absolute top-4 right-4 z-[400]">
+        <button
+          onClick={() => setShowMarkers(!showMarkers)}
+          className="bg-white p-2.5 rounded-xl shadow-sm border border-slate-200 text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors flex items-center gap-2"
+          title={showMarkers ? "Hide Markers" : "Show Markers"}
+        >
+          {showMarkers ? <Eye size={20} /> : <EyeOff size={20} />}
+          <span className="text-sm font-medium hidden sm:inline">
+            {showMarkers ? "Hide Markers" : "Show Markers"}
+          </span>
+        </button>
+      </div>
 
       {/* Temperature Legend */}
       <TemperatureLegend />

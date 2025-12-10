@@ -23,7 +23,18 @@ export const useHeatwaveData = () => {
             timestamp: event.ts,
             ...event // Spread other props just in case
           }));
-          setData(mappedData);
+
+          // Deduplicate by city ID, keeping the most recent entry
+          const uniqueDataMap = new Map();
+          mappedData.forEach(item => {
+            const existing = uniqueDataMap.get(item.id);
+            if (!existing || new Date(item.timestamp) > new Date(existing.timestamp)) {
+              uniqueDataMap.set(item.id, item);
+            }
+          });
+
+          const uniqueData = Array.from(uniqueDataMap.values());
+          setData(uniqueData);
         }
       } catch (err) {
         console.error('Failed to fetch heatwave data:', err);
