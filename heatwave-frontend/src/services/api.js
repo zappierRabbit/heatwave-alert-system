@@ -42,7 +42,7 @@ api.interceptors.response.use(
 // API methods
 export const getRecentEvents = async () => {
     try {
-        const response = await api.get('/events/recent');
+        const response = await api.get('/events/recent?limit=500');
 
         // Ensure we have an array
         if (!response.data || !Array.isArray(response.data)) {
