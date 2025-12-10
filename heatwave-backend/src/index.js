@@ -129,8 +129,8 @@ async function fetchBatchWeatherForBaseCities(baseCitiesChunk) {
             type: 'heat_update',
             cityId: city.id,
             city: city.name,
-            lat: city.lat,
-            lon: city.lon,
+            lat: roundCoord(city.lat),
+            lon: roundCoord(city.lon),
             tempC,
             rh,
             heatIndexC,
@@ -167,8 +167,8 @@ function expandEventsToSynthetic(baseEvents) {
                 ...baseEv,
                 cityId: pt.id,
                 city: pt.name,
-                lat: pt.lat,
-                lon: pt.lon,
+                lat: roundCoord(pt.lat),
+                lon: roundCoord(pt.lon),
                 synthetic: true,
                 heatWeight: baseEv.heatWeight
             });
@@ -315,3 +315,9 @@ function computeHeatWeight(hiC, riskLevel) {
 
     return Math.min(1, parseFloat(weight.toFixed(3)));
 }
+
+function roundCoord(value) {
+    if (typeof value !== 'number') return value;
+    return Number(value.toFixed(4)); // 4 decimal places
+}
+
