@@ -1,0 +1,28 @@
+{
+  "name": "pak-heatwave-backend",
+  "version": "1.0.0",
+  "description": "Pakistan Heatwave Detection & Early Warning backend (Node + Express + SSE + Open-Meteo)",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "nodemon src/index.js"
+  },
+  "keywords": [
+    "heatwave",
+    "pakistan",
+    "node",
+    "express",
+    "open-meteo",
+    "sse"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^1.7.0",
+    "cors": "^2.8.5",
+    "express": "^4.19.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.0"
+  }
+}
