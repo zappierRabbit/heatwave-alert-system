@@ -27,6 +27,10 @@ export const HeatmapLayer = ({ points }) => {
   const updateHeatLayer = () => {
     if (!points || points.length === 0) return;
 
+    // Safety check: ensure map has dimensions before drawing to avoid DOMException
+    const size = map.getSize();
+    if (size.x === 0 || size.y === 0) return;
+
     // Remove existing layer
     if (heatLayerRef.current) {
       map.removeLayer(heatLayerRef.current);

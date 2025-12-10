@@ -4,11 +4,12 @@ import clsx from 'clsx';
 
 const NavItem = ({ icon: Icon, label, active, onClick }) => (
     <button
+        type="button"
         onClick={onClick}
         className={clsx(
             'flex w-full items-center gap-3 rounded-lg px-3 py-2.5 transition-all text-sm font-medium',
             active
-                ? 'bg-red-50 text-red-600'
+                ? 'bg-yellow-50 text-yellow-600 font-bold'
                 : 'text-slate-500 hover:bg-slate-100 hover:text-slate-900'
         )}
     >
@@ -19,7 +20,7 @@ const NavItem = ({ icon: Icon, label, active, onClick }) => (
 
 export const Sidebar = ({ activeTab, onTabChange }) => {
     return (
-        <div className="flex h-screen w-64 flex-col border-r border-slate-200 bg-white p-4">
+        <div className="flex h-screen w-64 flex-col border-r border-slate-200 bg-white p-4 relative z-50">
             <div className="mb-8 flex items-center gap-2 px-2">
                 <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-red-600">
                     <MapIcon className="text-white" size={20} />
@@ -36,6 +37,12 @@ export const Sidebar = ({ activeTab, onTabChange }) => {
                     label="Dashboard"
                     active={activeTab === 'dashboard'}
                     onClick={() => onTabChange('dashboard')}
+                />
+                <NavItem
+                    icon={MapIcon}
+                    label="Statistics"
+                    active={activeTab === 'statistics'}
+                    onClick={() => onTabChange('statistics')}
                 />
                 <NavItem
                     icon={Bell}

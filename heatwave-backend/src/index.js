@@ -9,7 +9,12 @@ const { computeHeatIndexC, classifyHeatRisk } = require('./utils/heatIndex');
 const app = express();
 const PORT = process.env.PORT || 4000;
 
-app.use(cors());
+
+app.use(cors({
+    origin: 'http://localhost:5173', // your React dev server
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    credentials: true, // if you need cookies
+}));
 app.use(express.json());
 
 // In-memory event store (latest first)
@@ -222,7 +227,7 @@ async function pollAllCitiesBatched() {
 })();
 
 // Poll every 10 minutes
-const POLL_INTERVAL_MS = 10 *60 * 1000;
+const POLL_INTERVAL_MS = 10 * 60 * 1000;
 setInterval(pollAllCitiesBatched, POLL_INTERVAL_MS);
 
 // ---- Endpoints ----

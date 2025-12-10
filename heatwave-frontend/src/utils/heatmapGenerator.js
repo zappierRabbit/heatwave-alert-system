@@ -11,8 +11,10 @@ export const generateHeatmapPoints = (cities) => {
   const points = [];
 
   cities.forEach((city) => {
-    // Normalize temperature to 0-1 intensity
-    const intensity = Math.min(1, Math.max(0, (city.temp - minTemp) / tempRange));
+    // Use heatWeight directly if available (normalized 0-1), otherwise calculate from temp
+    const intensity = city.heatWeight !== undefined
+      ? Math.min(1, Math.max(0, city.heatWeight))
+      : Math.min(1, Math.max(0, (city.temp - minTemp) / tempRange));
 
     // Add the city center point
     points.push([city.lat, city.lng, intensity]);

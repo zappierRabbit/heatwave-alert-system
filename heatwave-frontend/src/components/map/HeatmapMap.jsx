@@ -19,6 +19,8 @@ const MapController = ({ selectedCity }) => {
   const map = useMap();
 
   React.useEffect(() => {
+    // Ensure map knows its container size immediately
+    map.invalidateSize();
     // Set max bounds to restrict panning
     map.setMaxBounds(PAKISTAN_BOUNDS);
   }, [map]);
