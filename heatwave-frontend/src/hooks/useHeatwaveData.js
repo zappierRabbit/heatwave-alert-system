@@ -19,7 +19,7 @@ export const useHeatwaveData = () => {
             lng: event.lon, // API uses lon, we use lng
             temp: event.tempC,
             heatWeight: event.heatWeight,
-            status: event.riskLevel ? event.riskLevel.charAt(0).toUpperCase() + event.riskLevel.slice(1) : 'Normal', // Capitalize
+            status: getRiskLevel(event.heatWeight),
             timestamp: event.ts,
             ...event // Spread other props just in case
           }));
@@ -31,6 +31,16 @@ export const useHeatwaveData = () => {
       } finally {
         setLoading(false);
       }
+    };
+
+    // Helper to determine risk level from heatWeight
+    const getRiskLevel = (weight) => {
+      const w = parseFloat(weight);
+      if (isNaN(w)) return 'Safe'; // Default to safe if invalid
+      if (w >= 6) return 'Extreme';
+      if (w >= 4) return 'Dangerous';
+      if (w >= 2) return 'Caution';
+      return 'None';
     };
 
     // Initial fetch

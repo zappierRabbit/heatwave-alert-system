@@ -1,47 +1,57 @@
 
 import {
     LayoutDashboard,
-    Map as MapIcon,
     Settings,
     BarChart3,
     FileText,
-
     ChevronLeft,
+    ChevronRight,
 } from 'lucide-react';
 
-const NavItem = ({ icon: Icon, label, active, onClick }) => (
+const NavItem = ({ icon: Icon, label, active, onClick, collapsed }) => (
     <button
         type="button"
         onClick={onClick}
         className={`flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-[15px] font-medium transition-all duration-200 ${active
             ? 'bg-white/10 text-white'
             : 'text-slate-400 hover:bg-white/5 hover:text-slate-200'
-            }`}
+            } ${collapsed ? 'justify-center' : ''}`}
     >
         <Icon size={20} strokeWidth={1.8} />
-        <span>{label}</span>
+        {!collapsed && <span>{label}</span>}
     </button>
 );
 
 export const Sidebar = ({ activeTab, onTabChange, collapsed = false, onToggleCollapse }) => {
     return (
-        <div className="flex h-screen w-64 flex-col bg-slate-900 relative z-50">
+        <div className={`flex h-screen flex-col bg-slate-900 relative z-50 transition-all duration-300 ${collapsed ? 'w-20' : 'w-64'}`}>
             {/* Toggle Button */}
-            <div className="flex items-center gap-2 px-4 py-4 border-b border-slate-800">
+            <div className={`flex items-center gap-2 px-4 py-4 border-b border-slate-800 ${collapsed ? 'justify-center' : ''}`}>
                 <button
                     onClick={onToggleCollapse}
                     className="flex items-center gap-2 text-slate-400 hover:text-slate-200 transition-colors"
                 >
-                    <ChevronLeft size={18} strokeWidth={2} />
-                    <span className="text-xs font-semibold uppercase tracking-wider">Hide Menu</span>
+                    {collapsed ? (
+                        <ChevronRight size={20} strokeWidth={2} />
+                    ) : (
+                        <>
+                            <ChevronLeft size={18} strokeWidth={2} />
+                            <span className="text-xs font-semibold uppercase tracking-wider">Hide Menu</span>
+                        </>
+
+                    )}
                 </button>
             </div>
 
             {/* Brand */}
-            <div className="px-4 py-6">
-                <div className="flex items-center gap-1">
-                    <h1 className="text-2xl font-bold text-white tracking-tight ">HeatWatch</h1>
-                </div>
+            <div className={`px-4 py-6 ${collapsed ? 'flex justify-center' : ''}`}>
+                {collapsed ? (
+                    <h1 className="text-xl font-bold text-white tracking-tight">HW</h1>
+                ) : (
+                    <div className="flex items-center gap-1">
+                        <h1 className="text-2xl font-bold text-white tracking-tight ">HeatWatch</h1>
+                    </div>
+                )}
             </div>
 
             {/* Navigation */}
@@ -51,26 +61,21 @@ export const Sidebar = ({ activeTab, onTabChange, collapsed = false, onToggleCol
                     label="Dashboard"
                     active={activeTab === 'dashboard'}
                     onClick={() => onTabChange('dashboard')}
+                    collapsed={collapsed}
                 />
-                <NavItem
-                    icon={MapIcon}
-                    label="Campaign"
-                    active={activeTab === 'campaign'}
-                    onClick={() => onTabChange('campaign')}
-                />
-
-
                 <NavItem
                     icon={BarChart3}
                     label="Statistics"
                     active={activeTab === 'statistics'}
                     onClick={() => onTabChange('statistics')}
+                    collapsed={collapsed}
                 />
                 <NavItem
                     icon={FileText}
                     label="Reports"
                     active={activeTab === 'reports'}
                     onClick={() => onTabChange('reports')}
+                    collapsed={collapsed}
                 />
 
             </nav>
@@ -82,6 +87,7 @@ export const Sidebar = ({ activeTab, onTabChange, collapsed = false, onToggleCol
                     label="Settings"
                     active={activeTab === 'settings'}
                     onClick={() => onTabChange('settings')}
+                    collapsed={collapsed}
                 />
             </div>
         </div>

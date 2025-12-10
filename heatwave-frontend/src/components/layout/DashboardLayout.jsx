@@ -2,11 +2,12 @@ import { useState } from 'react';
 import { Sidebar } from './Sidebar';
 import { ChevronDown, Search, Bell, User } from 'lucide-react';
 
-const Header = ({ activeTab }) => {
+const Header = ({ activeTab, onSearch }) => {
+  const [searchQuery, setSearchQuery] = useState('');
+
   const getPageTitle = () => {
     const titles = {
       dashboard: 'Dashboard',
-      campaign: 'Campaign',
       statistics: 'Statistics',
       reports: 'Reports',
       settings: 'Settings',
@@ -14,18 +15,17 @@ const Header = ({ activeTab }) => {
     return titles[activeTab] || 'Dashboard';
   };
 
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      onSearch(searchQuery);
+    }
+  };
+
   return (
     <header className="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-6 shrink-0">
       {/* Left side - Page title and breadcrumb */}
       <div className="flex items-center gap-4">
         <h1 className="text-2xl font-bold text-slate-800">{getPageTitle()}</h1>
-        <div className="flex items-center gap-2 text-sm text-slate-500">
-          <span>Displaying</span>
-          <button className=" flex items-center gap-1 text-slate-700 font-medium hover:text-slate-900 transition-colors">
-            Campaigns
-            <ChevronDown size={16} />
-          </button>
-        </div>
       </div>
 
       {/* Right side - Search and actions */}
@@ -35,7 +35,10 @@ const Header = ({ activeTab }) => {
           <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
           <input
             type="text"
-            placeholder="Search..."
+            placeholder="Search city..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            onKeyDown={handleKeyDown}
             className="w-48 h-10 pl-10 pr-4 bg-white border border-slate-200 rounded-lg text-sm text-slate-700 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-200 focus:border-slate-300 transition-all"
           />
         </div>
@@ -59,7 +62,7 @@ const Header = ({ activeTab }) => {
   );
 };
 
-export const DashboardLayout = ({ children, activeTab, onTabChange }) => {
+export const DashboardLayout = ({ children, activeTab, onTabChange, onSearch }) => {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
   return (
@@ -71,7 +74,7 @@ export const DashboardLayout = ({ children, activeTab, onTabChange }) => {
         onToggleCollapse={() => setSidebarCollapsed(!sidebarCollapsed)}
       />
       <div className="flex-1 flex flex-col overflow-hidden">
-        <Header activeTab={activeTab} />
+        <Header activeTab={activeTab} onSearch={onSearch} />
         <main className="flex-1 relative overflow-hidden">{children}</main>
       </div>
     </div>

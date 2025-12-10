@@ -129,10 +129,10 @@ export const HeatmapMap = ({ data, onCitySelect, selectedCity }) => {
           <CircleMarker
             key={city.id}
             center={[city.lat, city.lng]}
-            radius={8}
+            radius={3}
             pathOptions={{
               color: '#fff',
-              weight: 2,
+              weight: 1,
               fillColor: getTemperatureColor(city.temp),
               fillOpacity: 0.9,
             }}
@@ -154,9 +154,10 @@ export const HeatmapMap = ({ data, onCitySelect, selectedCity }) => {
                 >
                   {city.temp}°C
                 </div>
-                {city.status !== 'Normal' && (
+                {city.status !== 'None' && (
                   <div
-                    className={`text-xs font-medium ${city.status === 'Critical' ? 'text-red-600' : 'text-amber-600'}`}
+                    className={`text-xs font-medium ${['Extreme', 'Dangerous'].includes(city.status) ? 'text-red-600' : 'text-amber-600'
+                      }`}
                   >
                     {city.status}
                   </div>

@@ -36,10 +36,21 @@ export const HeatmapLayer = ({ points }) => {
       map.removeLayer(heatLayerRef.current);
     }
 
+    // Dynamic radius and blur based on zoom level
+    // When zooming out, use smaller radius to prevent excessive overlap (which leads to inaccurate red colors)
+    const currentZoom = map.getZoom();
+
+    // Scale from zoom 5 (min) to 10 (default detail view)
+    // Base: radius 35, blur 25 at zoom 10
+    // Min: radius 15, blur 10 at zoom 5
+    const normalizedZoom = Math.max(0, Math.min(1, (currentZoom - 5) / 5));
+    const radius = 15 + (normalizedZoom * 20); // 15 to 35
+    const blur = 10 + (normalizedZoom * 15);   // 10 to 25
+
     // Create heat layer - simpler config like CodeSandbox example
     heatLayerRef.current = L.heatLayer(points, {
-      radius: 35,
-      blur: 25,
+      radius: radius,
+      blur: blur,
       maxZoom: 10,
       max: 1.0,
       minOpacity: 0.5,

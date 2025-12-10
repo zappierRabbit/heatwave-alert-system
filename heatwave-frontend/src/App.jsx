@@ -15,8 +15,16 @@ function App() {
   const avgTemp = (data.reduce((acc, curr) => acc + curr.temp, 0) / (data.length || 1)).toFixed(1);
   const maxTemp = data.length > 0 ? Math.max(...data.map(c => c.temp)).toFixed(1) : '0';
 
+  const handleSearch = (query) => {
+    if (!query) return;
+    const city = data.find((c) => c.name.toLowerCase().includes(query.toLowerCase()));
+    if (city) {
+      setSelectedCity(city);
+    }
+  };
+
   return (
-    <DashboardLayout activeTab={activeTab} onTabChange={setActiveTab}>
+    <DashboardLayout activeTab={activeTab} onTabChange={setActiveTab} onSearch={handleSearch}>
       {activeTab === 'dashboard' ? (
         <>
           {/* Stats Overlay */}
