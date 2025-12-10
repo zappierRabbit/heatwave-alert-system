@@ -1,71 +1,120 @@
 import React from 'react';
-import { LayoutDashboard, Map as MapIcon, Settings, Bell, Info } from 'lucide-react';
-import clsx from 'clsx';
+import {
+  LayoutDashboard,
+  Map as MapIcon,
+  Settings,
+  BarChart3,
+  FileText,
+  List,
+  Image,
+  HelpCircle,
+  ChevronLeft,
+} from 'lucide-react';
 
 const NavItem = ({ icon: Icon, label, active, onClick }) => (
-    <button
-        type="button"
-        onClick={onClick}
-        className={clsx(
-            'flex w-full items-center gap-3 rounded-lg px-3 py-2.5 transition-all text-sm font-medium',
-            active
-                ? 'bg-yellow-50 text-yellow-600 font-bold'
-                : 'text-slate-500 hover:bg-slate-100 hover:text-slate-900'
-        )}
-    >
-        <Icon size={20} />
-        <span>{label}</span>
-    </button>
+  <button
+    type="button"
+    onClick={onClick}
+    className={`flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-[15px] font-medium transition-all duration-200 ${
+      active
+        ? 'bg-white/10 text-white'
+        : 'text-slate-400 hover:bg-white/5 hover:text-slate-200'
+    }`}
+  >
+    <Icon size={20} strokeWidth={1.8} />
+    <span>{label}</span>
+  </button>
 );
 
-export const Sidebar = ({ activeTab, onTabChange }) => {
-    return (
-        <div className="flex h-screen w-64 flex-col border-r border-slate-200 bg-white p-4 relative z-50">
-            <div className="mb-8 flex items-center gap-2 px-2">
-                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-red-600">
-                    <MapIcon className="text-white" size={20} />
-                </div>
-                <div>
-                    <h1 className="text-lg font-bold text-slate-900 leading-tight">HeatWatch</h1>
-                    <p className="text-xs text-slate-500">Pakistan Alert System</p>
-                </div>
-            </div>
+export const Sidebar = ({ activeTab, onTabChange, collapsed = false, onToggleCollapse }) => {
+  return (
+    <div className="flex h-screen w-64 flex-col bg-slate-900 relative z-50">
+      {/* Toggle Button */}
+      <div className="flex items-center gap-2 px-4 py-4 border-b border-slate-800">
+        <button
+          onClick={onToggleCollapse}
+          className="flex items-center gap-2 text-slate-400 hover:text-slate-200 transition-colors"
+        >
+          <ChevronLeft size={18} strokeWidth={2} />
+          <span className="text-xs font-semibold uppercase tracking-wider">Hide Menu</span>
+        </button>
+      </div>
 
-            <div className="flex flex-1 flex-col gap-1">
-                <NavItem
-                    icon={LayoutDashboard}
-                    label="Dashboard"
-                    active={activeTab === 'dashboard'}
-                    onClick={() => onTabChange('dashboard')}
-                />
-                <NavItem
-                    icon={MapIcon}
-                    label="Statistics"
-                    active={activeTab === 'statistics'}
-                    onClick={() => onTabChange('statistics')}
-                />
-                <NavItem
-                    icon={Bell}
-                    label="Alerts"
-                    active={activeTab === 'alerts'}
-                    onClick={() => onTabChange('alerts')}
-                />
-                <NavItem
-                    icon={Info}
-                    label="Reports"
-                    active={activeTab === 'reports'}
-                    onClick={() => onTabChange('reports')}
-                />
-            </div>
-
-            <div className="mt-auto border-t border-slate-200 pt-4">
-                <NavItem
-                    icon={Settings}
-                    label="Settings"
-                    active={activeTab === 'settings'}
-                    onClick={() => onTabChange('settings')}
-                />
-            </div>
+      {/* Brand */}
+      <div className="px-4 py-6">
+        <div className="flex items-center gap-1">
+          <span className="text-slate-500 text-xs align-top">M</span>
+          <h1 className="text-2xl font-bold text-white tracking-tight">HeatWatch</h1>
         </div>
-    );
+      </div>
+
+      {/* Navigation */}
+      <nav className="flex-1 px-3 space-y-1 overflow-y-auto">
+        <NavItem
+          icon={LayoutDashboard}
+          label="Dashboard"
+          active={activeTab === 'dashboard'}
+          onClick={() => onTabChange('dashboard')}
+        />
+        <NavItem
+          icon={MapIcon}
+          label="Campaign"
+          active={activeTab === 'campaign'}
+          onClick={() => onTabChange('campaign')}
+        />
+        <NavItem
+          icon={List}
+          label="Ad Sets"
+          active={activeTab === 'adsets'}
+          onClick={() => onTabChange('adsets')}
+        />
+        <NavItem
+          icon={Image}
+          label="Creatives"
+          active={activeTab === 'creatives'}
+          onClick={() => onTabChange('creatives')}
+        />
+        <NavItem
+          icon={BarChart3}
+          label="Statistics"
+          active={activeTab === 'statistics'}
+          onClick={() => onTabChange('statistics')}
+        />
+        <NavItem
+          icon={FileText}
+          label="Reports"
+          active={activeTab === 'reports'}
+          onClick={() => onTabChange('reports')}
+        />
+        <NavItem
+          icon={List}
+          label="Defined Lists"
+          active={activeTab === 'lists'}
+          onClick={() => onTabChange('lists')}
+        />
+        <NavItem
+          icon={Image}
+          label="Library"
+          active={activeTab === 'library'}
+          onClick={() => onTabChange('library')}
+        />
+        <NavItem
+          icon={HelpCircle}
+          label="FAQ"
+          active={activeTab === 'faq'}
+          onClick={() => onTabChange('faq')}
+        />
+      </nav>
+
+      {/* Footer */}
+      <div className="border-t border-slate-800 p-3">
+        <NavItem
+          icon={Settings}
+          label="Settings"
+          active={activeTab === 'settings'}
+          onClick={() => onTabChange('settings')}
+        />
+      </div>
+    </div>
+  );
 };
