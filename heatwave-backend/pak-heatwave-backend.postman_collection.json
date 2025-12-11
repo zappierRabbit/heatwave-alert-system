@@ -13,8 +13,13 @@
         "header": [],
         "url": {
           "raw": "{{base_url}}/events/stream",
-          "host": ["{{base_url}}"],
-          "path": ["events", "stream"]
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "events",
+            "stream"
+          ]
         },
         "description": "Server-Sent Events (SSE) stream for heat updates.\nNote: Postman doesn't fully render SSE; you may see chunked text."
       },
@@ -27,8 +32,13 @@
         "header": [],
         "url": {
           "raw": "{{base_url}}/api/cities",
-          "host": ["{{base_url}}"],
-          "path": ["api", "cities"]
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "cities"
+          ]
         },
         "description": "Returns list of base (real) cities used for polling."
       },
@@ -41,8 +51,14 @@
         "header": [],
         "url": {
           "raw": "{{base_url}}/api/cities/all",
-          "host": ["{{base_url}}"],
-          "path": ["api", "cities", "all"]
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "cities",
+            "all"
+          ]
         },
         "description": "Returns all cities including synthetic points used to densify the heatmap."
       },
@@ -55,8 +71,14 @@
         "header": [],
         "url": {
           "raw": "{{base_url}}/api/events/recent",
-          "host": ["{{base_url}}"],
-          "path": ["api", "events", "recent"]
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "events",
+            "recent"
+          ]
         },
         "description": "Returns recent heat_update events from in-memory buffer (latest first)."
       },
@@ -69,8 +91,14 @@
         "header": [],
         "url": {
           "raw": "{{base_url}}/api/events/recent?limit=20",
-          "host": ["{{base_url}}"],
-          "path": ["api", "events", "recent"],
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "events",
+            "recent"
+          ],
           "query": [
             {
               "key": "limit",
@@ -89,8 +117,13 @@
         "header": [],
         "url": {
           "raw": "{{base_url}}/api/city?id=lahore",
-          "host": ["{{base_url}}"],
-          "path": ["api", "city"],
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "city"
+          ],
           "query": [
             {
               "key": "id",
@@ -109,8 +142,13 @@
         "header": [],
         "url": {
           "raw": "{{base_url}}/api/city?name=Lahore",
-          "host": ["{{base_url}}"],
-          "path": ["api", "city"],
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "city"
+          ],
           "query": [
             {
               "key": "name",
@@ -129,10 +167,34 @@
         "header": [],
         "url": {
           "raw": "{{base_url}}/health",
-          "host": ["{{base_url}}"],
-          "path": ["health"]
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "health"
+          ]
         },
         "description": "Returns backend health, uptime, clients count, events count, poll interval, and city counts."
+      },
+      "response": []
+    },
+    {
+      "name": "Get Test Heat Events (Static JSON)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/api/test/heat-events",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "test",
+            "heat-events"
+          ]
+        },
+        "description": "Returns static heat event data from testHeatEvents.json. Used for frontend testing without real backend polling."
       },
       "response": []
     }
