@@ -13,10 +13,12 @@ const Header = ({ activeTab, onSearch, data = [], onTabChange }) => {
   const getPageTitle = () => {
     const titles = {
       dashboard: 'Dashboard',
+      heatmap: 'Heat Map',
       statistics: 'Statistics',
       reports: 'Reports',
       settings: 'Settings',
       alerts: 'Alerts',
+      historical: 'Historical Analysis',
       sops: 'SOPs & Resources'
     };
     return titles[activeTab] || 'Dashboard';
@@ -65,7 +67,7 @@ const Header = ({ activeTab, onSearch, data = [], onTabChange }) => {
       {/* Right side - Search and actions */}
       <div className="flex items-center gap-4">
         {/* Search */}
-        {activeTab === 'dashboard' && (
+        {activeTab === 'heatmap' && (
           <div className="relative">
             <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
             <input

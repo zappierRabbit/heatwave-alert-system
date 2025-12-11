@@ -9,6 +9,7 @@ import {
     ChevronLeft,
     ChevronRight,
     Map,
+    History,
 } from 'lucide-react';
 
 const NavItem = ({ icon: Icon, label, active, onClick, collapsed }) => (
@@ -73,17 +74,11 @@ export const Sidebar = ({ activeTab, onTabChange, collapsed = false, onToggleCol
                     onClick={() => onTabChange('heatmap')}
                     collapsed={collapsed}
                 />
+
                 <NavItem
                     icon={FileText}
                     label="Reports"
                     onClick={() => onTabChange('reports')}
-                    collapsed={collapsed}
-                />
-                <NavItem
-                    icon={BookOpen}
-                    label="SOPs & Resources"
-                    active={activeTab === 'sops'}
-                    onClick={() => onTabChange('sops')}
                     collapsed={collapsed}
                 />
                 <NavItem
@@ -93,6 +88,14 @@ export const Sidebar = ({ activeTab, onTabChange, collapsed = false, onToggleCol
                     onClick={() => onTabChange('alerts')}
                     collapsed={collapsed}
                 />
+                <NavItem
+                    icon={BookOpen}
+                    label="SOPs & Resources"
+                    active={activeTab === 'sops'}
+                    onClick={() => onTabChange('sops')}
+                    collapsed={collapsed}
+                />
+
 
             </nav>
 

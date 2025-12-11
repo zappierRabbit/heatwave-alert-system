@@ -15,6 +15,7 @@ import {
   Search
 } from 'lucide-react';
 import { HeatmapMap } from '../map/HeatmapMap';
+import { HistoricalWeatherChart } from './HistoricalWeatherChart';
 
 const SimpleBarChart = ({ title, data, colorClass = "bg-blue-500", getColor }) => {
   // Use a fixed max value of 50 for temperature/heat index to represent the "potential" max heat.
@@ -259,6 +260,9 @@ export const StatisticsPanel = ({ data, onBack }) => {
             )}
           </div>
         </div>
+
+        {/* Historical Analysis Section */}
+        <HistoricalWeatherChart embedded={true} />
 
         {/* Data Table Section */}
         <div className="bg-white rounded-3xl shadow-soft border border-slate-100 overflow-hidden">

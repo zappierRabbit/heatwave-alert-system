@@ -57,8 +57,8 @@ export const useHeatwaveData = () => {
     // Initial fetch
     fetchData();
 
-    // Poll every 30 seconds
-    const interval = setInterval(fetchData, 30000);
+    // Poll every 10 minutes
+    const interval = setInterval(fetchData, 600000);
 
     return () => clearInterval(interval);
   }, []);
