@@ -26,7 +26,7 @@ const NavItem = ({ icon: Icon, label, active, onClick, collapsed }) => (
     </button>
 );
 
-export const Sidebar = ({ activeTab, onTabChange, collapsed = false, onToggleCollapse }) => {
+export const Sidebar = ({ activeTab, onTabChange, collapsed = false, onToggleCollapse, isTestMode, onToggleTestMode }) => {
     return (
         <div className={`flex h-screen flex-col bg-slate-900 relative z-50 transition-all duration-300 ${collapsed ? 'w-20' : 'w-64'}`}>
             {/* Toggle Button */}
@@ -101,6 +101,15 @@ export const Sidebar = ({ activeTab, onTabChange, collapsed = false, onToggleCol
 
             {/* Footer */}
             <div className="border-t border-slate-800 p-3">
+                {/* Test Mode Toggle */}
+                <div className={`flex items-center gap-3 px-3 py-2.5 mb-2 rounded-lg text-slate-400 hover:bg-white/5 transition-colors ${collapsed ? 'justify-center' : ''}`}>
+                    <div className="relative inline-flex items-center cursor-pointer" onClick={onToggleTestMode}>
+                        <input type="checkbox" className="sr-only peer" checked={isTestMode} readOnly />
+                        <div className="w-9 h-5 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-indigo-600"></div>
+                        {!collapsed && <span className="ml-3 text-[15px] font-medium text-slate-400 group-hover:text-slate-200 select-none">Test Mode</span>}
+                    </div>
+                </div>
+
                 <NavItem
                     icon={Settings}
                     label="Settings"

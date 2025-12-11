@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { DashboardLayout } from './components/layout/DashboardLayout';
 import { HeatmapMap } from './components/map/HeatmapMap';
 import { CityDetailPanel } from './components/dashboard/CityDetailPanel';
@@ -7,12 +7,69 @@ import { SOPsPanel } from './components/dashboard/SOPsPanel';
 import { AlertsPanel } from './components/alerts/AlertsPanel';
 import { HistoricalWeatherChart } from './components/dashboard/HistoricalWeatherChart';
 import { useHeatwaveData } from './hooks/useHeatwaveData';
+import { useAlerts } from './context/AlertContext';
 import { Thermometer, TrendingUp, MapPin } from 'lucide-react';
 
 function App() {
   const [selectedCity, setSelectedCity] = useState(null);
   const [activeTab, setActiveTab] = useState('dashboard');
-  const data = useHeatwaveData();
+  const [isTestMode, setIsTestMode] = useState(false);
+
+  const data = useHeatwaveData(isTestMode);
+  const { replaceAlerts, addAlert } = useAlerts();
+
+  // Alert Generation Logic
+  useEffect(() => {
+    if (!data || data.length === 0) return;
+
+    const newAlerts = [];
+    const now = new Date().toISOString();
+
+    data.forEach(city => {
+      // Use heatWeight if available
+      const weight = parseFloat(city.heatWeight);
+      if (isNaN(weight)) return;
+
+      if (weight >= 0.7) {
+        newAlerts.push({
+          id: `alert-${city.id}-critical-${now}`, // Unique-ish ID
+          city: city.name,
+          severity: 'critical',
+          message: `Critical Heatwave Alert! Heat weight is ${weight}. Immediate action required.`,
+          timestamp: city.timestamp || now,
+          read: false,
+          heatWeight: weight
+        });
+      } else if (weight >= 0.5) {
+        newAlerts.push({
+          id: `alert-${city.id}-warning-${now}`,
+          city: city.name,
+          severity: 'warning',
+          message: `Heatwave Warning. Heat weight is ${weight}. Monitoring required.`,
+          timestamp: city.timestamp || now,
+          read: false,
+          heatWeight: weight
+        });
+      }
+    });
+
+    // Remove duplicates based on city and severity to prevent spam if using addAlert,
+    // but here we are using replaceAlerts so we just replace the whole list.
+    // However, we might want to keep "read" status.
+    // For this simple implementation, replacing is fine, but it resets "read" status.
+    // A better approach would be to merge. But user asked to "populate" alerts.
+
+    // Sort by severity (critical first) then weight
+    newAlerts.sort((a, b) => {
+      if (a.severity === 'critical' && b.severity !== 'critical') return -1;
+      if (a.severity !== 'critical' && b.severity === 'critical') return 1;
+      return b.heatWeight - a.heatWeight;
+    });
+
+    replaceAlerts(newAlerts);
+
+  }, [data, replaceAlerts]);
+
 
   // Calculate quick stats
   const avgTemp = (data.reduce((acc, curr) => acc + curr.temp, 0) / (data.length || 1)).toFixed(1);
@@ -27,7 +84,14 @@ function App() {
   };
 
   return (
-    <DashboardLayout activeTab={activeTab} onTabChange={setActiveTab} onSearch={handleSearch} data={data}>
+    <DashboardLayout
+      activeTab={activeTab}
+      onTabChange={setActiveTab}
+      onSearch={handleSearch}
+      data={data}
+      isTestMode={isTestMode}
+      onToggleTestMode={() => setIsTestMode(!isTestMode)}
+    >
       {activeTab === 'dashboard' ? (
         <StatisticsPanel data={data} />
       ) : activeTab === 'heatmap' ? (

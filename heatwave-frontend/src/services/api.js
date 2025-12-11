@@ -63,4 +63,14 @@ export const getRecentEvents = async () => {
     }
 };
 
+export const getTestHeatEvents = async () => {
+    try {
+        const response = await api.get('/test/heat-events');
+        return response.data || [];
+    } catch (error) {
+        console.error('Error fetching test events:', error);
+        return [];
+    }
+};
+
 export default api;

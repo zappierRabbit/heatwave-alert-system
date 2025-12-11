@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
-import { getRecentEvents } from '../services/api';
+import { getRecentEvents, getTestHeatEvents } from '../services/api';
 
-export const useHeatwaveData = () => {
+export const useHeatwaveData = (isTestMode = false) => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -9,7 +9,7 @@ export const useHeatwaveData = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const events = await getRecentEvents();
+        const events = isTestMode ? await getTestHeatEvents() : await getRecentEvents();
         if (events && Array.isArray(events)) {
           console.log('API Response:', events[0]); // Debug log
           const mappedData = events.map(event => ({
@@ -57,11 +57,11 @@ export const useHeatwaveData = () => {
     // Initial fetch
     fetchData();
 
-    // Poll every 10 minutes
-    const interval = setInterval(fetchData, 600000);
+    // Poll every 5 minutes (300,000 ms) as requested
+    const interval = setInterval(fetchData, 300000);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [isTestMode]);
 
   return data;
 };

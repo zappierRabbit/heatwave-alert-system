@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Sidebar } from './Sidebar';
 import { ChevronDown, Search, Bell, User, X } from 'lucide-react';
-import { AlertProvider, useAlerts } from '../../context/AlertContext';
+import { useAlerts } from '../../context/AlertContext';
 import { NotificationToast } from '../alerts/NotificationToast';
 
 const Header = ({ activeTab, onSearch, data = [], onTabChange }) => {
@@ -146,24 +146,24 @@ const Header = ({ activeTab, onSearch, data = [], onTabChange }) => {
   );
 };
 
-export const DashboardLayout = ({ children, activeTab, onTabChange, onSearch, data }) => {
+export const DashboardLayout = ({ children, activeTab, onTabChange, onSearch, data, isTestMode, onToggleTestMode }) => {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
   return (
-    <AlertProvider>
-      <div className="flex h-screen w-full bg-slate-100 text-slate-900 overflow-hidden">
-        <Sidebar
-          activeTab={activeTab}
-          onTabChange={onTabChange}
-          collapsed={sidebarCollapsed}
-          onToggleCollapse={() => setSidebarCollapsed(!sidebarCollapsed)}
-        />
-        <div className="flex-1 flex flex-col overflow-hidden">
-          <Header activeTab={activeTab} onSearch={onSearch} data={data} onTabChange={onTabChange} />
-          <main className="flex-1 relative overflow-hidden">{children}</main>
-          <NotificationToast />
-        </div>
+    <div className="flex h-screen w-full bg-slate-100 text-slate-900 overflow-hidden">
+      <Sidebar
+        activeTab={activeTab}
+        onTabChange={onTabChange}
+        collapsed={sidebarCollapsed}
+        onToggleCollapse={() => setSidebarCollapsed(!sidebarCollapsed)}
+        isTestMode={isTestMode}
+        onToggleTestMode={onToggleTestMode}
+      />
+      <div className="flex-1 flex flex-col overflow-hidden">
+        <Header activeTab={activeTab} onSearch={onSearch} data={data} onTabChange={onTabChange} />
+        <main className="flex-1 relative overflow-hidden">{children}</main>
+        <NotificationToast />
       </div>
-    </AlertProvider>
+    </div>
   );
 };
