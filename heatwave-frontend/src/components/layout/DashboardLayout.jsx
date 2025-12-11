@@ -15,7 +15,6 @@ const Header = ({ activeTab, onSearch, data = [], onTabChange }) => {
       dashboard: 'Dashboard',
       heatmap: 'Heat Map',
       statistics: 'Statistics',
-      reports: 'Reports',
       settings: 'Settings',
       alerts: 'Alerts',
       historical: 'Historical Analysis',

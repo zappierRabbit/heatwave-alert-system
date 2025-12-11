@@ -3,7 +3,6 @@ import {
     LayoutDashboard,
     Settings,
     BarChart3,
-    FileText,
     BookOpen,
     AlertTriangle,
     ChevronLeft,
@@ -75,12 +74,7 @@ export const Sidebar = ({ activeTab, onTabChange, collapsed = false, onToggleCol
                     collapsed={collapsed}
                 />
 
-                <NavItem
-                    icon={FileText}
-                    label="Reports"
-                    onClick={() => onTabChange('reports')}
-                    collapsed={collapsed}
-                />
+
                 <NavItem
                     icon={AlertTriangle}
                     label="Alerts"

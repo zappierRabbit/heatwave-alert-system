@@ -53,12 +53,6 @@ function App() {
       }
     });
 
-    // Remove duplicates based on city and severity to prevent spam if using addAlert,
-    // but here we are using replaceAlerts so we just replace the whole list.
-    // However, we might want to keep "read" status.
-    // For this simple implementation, replacing is fine, but it resets "read" status.
-    // A better approach would be to merge. But user asked to "populate" alerts.
-
     // Sort by severity (critical first) then weight
     newAlerts.sort((a, b) => {
       if (a.severity === 'critical' && b.severity !== 'critical') return -1;
@@ -66,9 +60,33 @@ function App() {
       return b.heatWeight - a.heatWeight;
     });
 
-    replaceAlerts(newAlerts);
+    const timeouts = [];
 
-  }, [data, replaceAlerts]);
+    if (isTestMode) {
+      replaceAlerts([]); // Start fresh for test mode sequence
+
+      newAlerts.forEach((alert, index) => {
+        const t = setTimeout(() => {
+          // Update timestamp so the toast notification sees it as "new"
+          const freshAlert = {
+            ...alert,
+            timestamp: new Date().toISOString(),
+            // Ensure ID uniqueness if re-running
+            id: `${alert.id}-seq-${index}`
+          };
+          addAlert(freshAlert);
+        }, index * 2000);
+        timeouts.push(t);
+      });
+    } else {
+      replaceAlerts(newAlerts);
+    }
+
+    return () => {
+      timeouts.forEach(clearTimeout);
+    };
+
+  }, [data, replaceAlerts, addAlert, isTestMode]);
 
 
   // Calculate quick stats
