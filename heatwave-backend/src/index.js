@@ -1,5 +1,5 @@
 // src/index.js
-
+const testHeatEvents = require('./config/testHeatEvents.json');
 const express = require('express');
 const cors = require('cors');
 const axios = require('axios');
@@ -25,39 +25,39 @@ const MAX_EVENTS = 500;
 const clients = [];
 
 // ---- SSE endpoint ----
-app.get('/events/stream', (req, res) => {
-    res.set({
-        'Content-Type': 'text/event-stream',
-        'Cache-Control': 'no-cache',
-        Connection: 'keep-alive',
-    });
-    res.flushHeaders();
+// app.get('/events/stream', (req, res) => {
+//     res.set({
+//         'Content-Type': 'text/event-stream',
+//         'Cache-Control': 'no-cache',
+//         Connection: 'keep-alive',
+//     });
+//     res.flushHeaders();
 
-    const clientId = Date.now();
-    const client = { id: clientId, res };
+//     const clientId = Date.now();
+//     const client = { id: clientId, res };
 
-    clients.push(client);
-    console.log(`Client connected: ${clientId}, total=${clients.length}`);
+//     clients.push(client);
+//     console.log(`Client connected: ${clientId}, total=${clients.length}`);
 
-    res.write(`data: ${JSON.stringify({ type: 'welcome', ts: new Date().toISOString() })}\n\n`);
+//     res.write(`data: ${JSON.stringify({ type: 'welcome', ts: new Date().toISOString() })}\n\n`);
 
-    req.on('close', () => {
-        const idx = clients.findIndex((c) => c.id === clientId);
-        if (idx !== -1) clients.splice(idx, 1);
-        console.log(`Client closed: ${clientId}, total=${clients.length}`);
-    });
-});
+//     req.on('close', () => {
+//         const idx = clients.findIndex((c) => c.id === clientId);
+//         if (idx !== -1) clients.splice(idx, 1);
+//         console.log(`Client closed: ${clientId}, total=${clients.length}`);
+//     });
+// });
 
-function sendEventToClients(event) {
-    const payload = `data: ${JSON.stringify(event)}\n\n`;
-    clients.forEach((c) => {
-        try {
-            c.res.write(payload);
-        } catch (e) {
-            console.error('Error writing SSE to client', e);
-        }
-    });
-}
+// function sendEventToClients(event) {
+//     const payload = `data: ${JSON.stringify(event)}\n\n`;
+//     clients.forEach((c) => {
+//         try {
+//             c.res.write(payload);
+//         } catch (e) {
+//             console.error('Error writing SSE to client', e);
+//         }
+//     });
+// }
 
 // ---------- BATCH HELPERS ----------
 
@@ -82,7 +82,7 @@ async function fetchBatchWeatherForBaseCities(baseCitiesChunk) {
         'https://api.open-meteo.com/v1/forecast' +
         `?latitude=${latitudes}` +
         `&longitude=${longitudes}` +
-        `&hourly=temperature_2m,relativehumidity_2m` +
+        `&hourly=temperature_2m,relativehumidity_2m,direct_radiation_instant` +
         `&current_weather=true` +
         `&timezone=GMT`;
 
@@ -107,22 +107,27 @@ async function fetchBatchWeatherForBaseCities(baseCitiesChunk) {
 
         const rhArr = resp.hourly?.relativehumidity_2m || [];
         const timeArr = resp.hourly?.time || [];
+        const radArr = resp.hourly?.direct_radiation_instant || [];
+
         const lastIdx = rhArr.length - 1;
         const rh = lastIdx >= 0 ? rhArr[lastIdx] : null;
         const rhTime = lastIdx >= 0 ? timeArr[lastIdx] : null;
+        const directRadiationInstant =
+            lastIdx >= 0 && radArr.length > lastIdx ? radArr[lastIdx] : null;
 
         if (tempC == null || rh == null) return;
 
         const heatIndexC = computeHeatIndexC(tempC, rh);
         const riskLevel = classifyHeatRisk(heatIndexC);
 
+        // PMD-like heatwave condition ...
         const pmdHeatwave =
             (city.type === 'plain' && tempC >= 40) ||
             (city.type === 'hilly' && tempC >= 30);
 
         const nowIso = new Date().toISOString();
 
-        // ---- NEW improved weight ----
+        // ---- weight ----
         const heatWeight = computeHeatWeight(heatIndexC, riskLevel);
 
         const event = {
@@ -139,6 +144,7 @@ async function fetchBatchWeatherForBaseCities(baseCitiesChunk) {
             pmdHeatwave,
             isDay,
             rhTime,
+            directRadiationInstant,
             synthetic: false,
             ts: nowIso
         };
@@ -284,6 +290,13 @@ app.get('/api/city', (req, res) => {
 
     res.json(ev);
 });
+
+// Test-only API: returns static heat events from JSON file
+// Frontend can use this instead of live API when in "test mode"
+app.get('/api/test/heat-events', (req, res) => {
+    res.json(testHeatEvents);
+});
+
 
 
 app.listen(PORT, () => {
